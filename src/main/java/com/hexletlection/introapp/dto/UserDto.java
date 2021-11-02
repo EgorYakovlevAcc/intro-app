@@ -1,30 +1,24 @@
 package com.hexletlection.introapp.dto;
 
+import java.util.List;
+
 public class UserDto {
-    private String name;
-    private String lastname;
+    private String username;
+    private List<CarDto> cars;
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getLastname() {
-        return lastname;
+    public List<CarDto> getCars() {
+        return cars;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    @Override
-    public String toString() {
-        return "UserDto{" +
-                "name='" + name + '\'' +
-                ", lastname='" + lastname + '\'' +
-                '}';
+    public void setCars(List<CarDto> cars) {
+        this.cars = cars;
     }
 }
