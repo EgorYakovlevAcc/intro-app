@@ -11,11 +11,10 @@ public class Car {
     private Long id;
     private String name;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Document document;
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "cars")
     private List<Box> boxes;
 
     public Document getDocument() {
@@ -48,5 +47,13 @@ public class Car {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Box> getBoxes() {
+        return boxes;
+    }
+
+    public void setBoxes(List<Box> boxes) {
+        this.boxes = boxes;
     }
 }

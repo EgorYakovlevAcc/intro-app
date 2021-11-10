@@ -5,7 +5,9 @@ import com.hexletlection.introapp.dao.UserRepository;
 import com.hexletlection.introapp.dto.CarDto;
 import com.hexletlection.introapp.dto.UserDto;
 import com.hexletlection.introapp.exception.CustomException;
+import com.hexletlection.introapp.model.Box;
 import com.hexletlection.introapp.model.Car;
+import com.hexletlection.introapp.model.Document;
 import com.hexletlection.introapp.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,15 +19,13 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     private UserRepository userRepository;
-    private CarService carService;
 
-    public UserServiceImpl(UserRepository userRepository, CarService carService) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.carService = carService;
     }
 
     @Override
-    public void createUser(UserDto userDto) {
+    public void createComplexUser(UserDto userDto) {
         User user = new User();
         user.setUsername(userDto.getUsername());
 
@@ -34,6 +34,20 @@ public class UserServiceImpl implements UserService {
                     Car car = new Car();
                     car.setName(carDto.getName());
                     car.setUser(user);
+
+                    Document document = new Document();
+                    document.setSerialNumber(carDto.getDocument().getSerialNumber());
+                    document.setCar(car);
+                    car.setDocument(document);
+
+                    car.setBoxes(carDto.getBoxes().stream()
+                            .map(boxDto -> {
+                                Box box = new Box();
+                                box.setNumber(boxDto.getNumber());
+                                box.setCars(List.of(car));
+                                return box;
+                            })
+                            .collect(Collectors.toList()));
                     return car;
                 })
                 .collect(Collectors.toList()));
@@ -62,5 +76,18 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toList());
         }
         throw IntroAppConstants.USER_NOT_FOUND_EXCEPTION;
+    }
+
+    @Override
+    public void createUser(UserDto userDto) {
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public User getUserById(Long userId) {
+        return userRepository.findUserById(userId);
     }
 }

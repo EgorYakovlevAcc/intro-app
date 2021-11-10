@@ -9,7 +9,7 @@ public class Document {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String serialNumber;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Car car;
 
     public Car getCar() {

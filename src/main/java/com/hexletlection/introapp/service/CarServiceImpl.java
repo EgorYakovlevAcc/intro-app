@@ -3,32 +3,26 @@ package com.hexletlection.introapp.service;
 import com.hexletlection.introapp.dao.CarRepository;
 import com.hexletlection.introapp.dto.CarDto;
 import com.hexletlection.introapp.model.Car;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import com.hexletlection.introapp.model.User;
 
 public class CarServiceImpl implements CarService {
     private CarRepository carRepository;
+    private UserService userService;
 
-    public CarServiceImpl(CarRepository carRepository) {
+    public CarServiceImpl(CarRepository carRepository, UserService userService) {
         this.carRepository = carRepository;
+        this.userService = userService;
     }
 
     @Override
-    public void save(Car car) {
+    public void createCar(CarDto carDto, Long userId) {
+        Car car = new Car();
+        car.setName(carDto.getName());
+
+        User user = userService.getUserById(userId);
+
+        car.setUser(user);
+
         carRepository.save(car);
-    }
-
-    @Override
-    public List<Car> saveAll(List<CarDto> carDtoList) {
-        List<Car> cars = carDtoList.stream()
-                .map(carDto -> {
-                    Car car = new Car();
-                    car.setName(carDto.getName());
-                    return car;
-                })
-                .collect(Collectors.toList());
-
-        return carRepository.saveAll(cars);
     }
 }

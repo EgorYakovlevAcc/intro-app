@@ -16,6 +16,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PostMapping("/users/full/")
+    public String createUserFull(@RequestBody @Valid UserDto userDto) {
+        userService.createComplexUser(userDto);
+        return "OK";
+    }
+
     @PostMapping("/users/")
     public String createUser(@RequestBody @Valid UserDto userDto) {
         userService.createUser(userDto);

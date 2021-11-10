@@ -12,12 +12,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class IntroAppConfig {
     @Bean
-    public UserService userService(UserRepository userRepository, CarService carService) {
-        return new UserServiceImpl(userRepository, carService);
+    public UserService userService(UserRepository userRepository) {
+        return new UserServiceImpl(userRepository);
     }
 
     @Bean
-    public CarService carService(CarRepository carRepository) {
-        return new CarServiceImpl(carRepository);
+    public CarService carService(CarRepository carRepository, UserService userService) {
+        return new CarServiceImpl(carRepository, userService);
     }
 }
