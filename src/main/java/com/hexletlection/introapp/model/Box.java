@@ -4,13 +4,12 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "USERS")
-public class User {
+@Table(name = "boxes")
+public class Box {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String username;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany
     private List<Car> cars;
 
     public Long getId() {
@@ -19,14 +18,6 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String name) {
-        this.username = name;
     }
 
     public List<Car> getCars() {

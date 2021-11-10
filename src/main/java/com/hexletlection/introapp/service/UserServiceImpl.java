@@ -1,12 +1,15 @@
 package com.hexletlection.introapp.service;
 
+import com.hexletlection.introapp.IntroAppConstants;
 import com.hexletlection.introapp.dao.UserRepository;
 import com.hexletlection.introapp.dto.CarDto;
 import com.hexletlection.introapp.dto.UserDto;
+import com.hexletlection.introapp.exception.CustomException;
 import com.hexletlection.introapp.model.Car;
 import com.hexletlection.introapp.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,21 +43,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getUserByUsername(String username) {
+    public List<UserDto> getUserByUsername(String username) throws CustomException {
         List<User> users = userRepository.findUsersByUsername(username);
-        return users.stream()
-                .map(user -> {
-                    UserDto userDto = new UserDto();
-                    userDto.setUsername(user.getUsername());
-                    userDto.setCars(user.getCars().stream()
-                            .map(car -> {
-                                CarDto carDto = new CarDto();
-                                carDto.setName(car.getName());
-                                return carDto;
-                            })
-                            .collect(Collectors.toList()));
-                    return userDto;
-                })
-                .collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(users)) {
+            return users.stream()
+                    .map(user -> {
+                        UserDto userDto = new UserDto();
+                        userDto.setUsername(user.getUsername());
+                        userDto.setCars(user.getCars().stream()
+                                .map(car -> {
+                                    CarDto carDto = new CarDto();
+                                    carDto.setName(car.getName());
+                                    return carDto;
+                                })
+                                .collect(Collectors.toList()));
+                        return userDto;
+                    })
+                    .collect(Collectors.toList());
+        }
+        throw IntroAppConstants.USER_NOT_FOUND_EXCEPTION;
     }
 }

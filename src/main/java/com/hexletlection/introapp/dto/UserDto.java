@@ -1,8 +1,13 @@
 package com.hexletlection.introapp.dto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class UserDto {
+    @NotNull
+    @Size(min = 3)
     private String username;
     private List<CarDto> cars;
 

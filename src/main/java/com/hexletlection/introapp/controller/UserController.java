@@ -1,11 +1,14 @@
 package com.hexletlection.introapp.controller;
 
 import com.hexletlection.introapp.dto.UserDto;
+import com.hexletlection.introapp.exception.CustomException;
 import com.hexletlection.introapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/v1.0")
@@ -14,13 +17,20 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/users/")
-    public String createUser(@RequestBody UserDto userDto) {
+    public String createUser(@RequestBody @Valid UserDto userDto) {
         userService.createUser(userDto);
         return "OK";
     }
 
     @GetMapping("/users/{username}")
-    public List<UserDto> createUser(@PathVariable("username") String username) {
-        return userService.getUserByUsername(username);
+    public ResponseEntity getUserByUsername(@PathVariable("username") String username) {
+        try {
+            return ResponseEntity.ok(this.userService.getUserByUsername(username));
+        } catch (CustomException e) {
+            if (Objects.equals(e.getErrorCode(), "IA-000")) {
+                return ResponseEntity.badRequest().body("");
+            }
+            return ResponseEntity.internalServerError().body("");
+        }
     }
 }

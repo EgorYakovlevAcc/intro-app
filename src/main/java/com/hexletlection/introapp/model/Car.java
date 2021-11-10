@@ -1,9 +1,10 @@
 package com.hexletlection.introapp.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "cars")
+@Table(name = "CARS")
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,6 +13,18 @@ public class Car {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    @OneToOne
+    private Document document;
+    @ManyToMany
+    private List<Box> boxes;
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
+    }
 
     public Long getId() {
         return id;
