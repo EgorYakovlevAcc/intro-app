@@ -16,6 +16,16 @@ public class Car {
     private Document document;
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "cars")
     private List<Box> boxes;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Order order;
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
     public Document getDocument() {
         return document;
